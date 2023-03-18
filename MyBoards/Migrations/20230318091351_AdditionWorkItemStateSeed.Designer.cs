@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyBoards.Entities;
 
@@ -11,9 +12,11 @@ using MyBoards.Entities;
 namespace MyBoards.Migrations
 {
     [DbContext(typeof(MyBoardsContext))]
-    partial class MyBoardsContextModelSnapshot : ModelSnapshot
+    [Migration("20230318091351_AdditionWorkItemStateSeed")]
+    partial class AdditionWorkItemStateSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -111,7 +114,10 @@ namespace MyBoards.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

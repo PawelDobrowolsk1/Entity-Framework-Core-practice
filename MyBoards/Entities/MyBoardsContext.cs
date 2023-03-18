@@ -26,7 +26,6 @@ public class MyBoardsContext : DbContext
              .IsRequired()
              .HasMaxLength(50);
 
-
         modelBuilder.Entity<Epic>()
             .Property(wi => wi.EndDate)
             .HasPrecision(3);
@@ -87,5 +86,10 @@ public class MyBoardsContext : DbContext
             .HasOne(u => u.Address)
             .WithOne(u => u.User)
             .HasForeignKey<Address>(a => a.UserId);
+
+        modelBuilder.Entity<WorkItemState>()
+            .HasData(new WorkItemState() { Id = 1, Value = "To Do" },
+            new WorkItemState() { Id = 2, Value = "Doing" },
+            new WorkItemState() { Id = 3, Value = "Done" });
     }
 }
