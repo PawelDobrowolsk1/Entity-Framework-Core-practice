@@ -25,7 +25,7 @@ using var scope = app.Services.CreateScope();
 var dbContext = scope.ServiceProvider.GetService<MyBoardsContext>();
 
 var pendingMigrations = dbContext.Database.GetPendingMigrations();
-if(pendingMigrations.Any())
+if (pendingMigrations.Any())
 {
     dbContext.Database.Migrate();
 }
@@ -55,19 +55,21 @@ if (!users.Any())
         }
     };
 
-    dbContext.Users.AddRange(user1 , user2);
+    dbContext.Users.AddRange(user1, user2);
     dbContext.SaveChanges();
 }
 
 
 app.MapGet("data", async (MyBoardsContext db) =>
 {
-    var statesCount = await db.WorkItems
-    .GroupBy(x => x.StateId)
-    .Select(g => new { stateId = g.Key, count = g.Count() })
+    var authorsComentCounts = await db.Comments
+    .GroupBy(c => c.AuthorId)
+    .Select(g => new { g.Key, Count = g.Count() })
     .ToListAsync();
 
-    return statesCount;
-});
+    var topAuthor = authorsComentCounts.First(a => a.Count == authorsComentCounts.Max(acc => acc.Count));
 
+    var userDetails = db.Users.First(u => u.Id == topAuthor.Key);
+    return new { userDetails, commentCount = topAuthor.Count };
+});
 app.Run();
