@@ -60,4 +60,14 @@ if (!users.Any())
 }
 
 
+app.MapGet("data", async (MyBoardsContext db) =>
+{
+    var statesCount = await db.WorkItems
+    .GroupBy(x => x.StateId)
+    .Select(g => new { stateId = g.Key, count = g.Count() })
+    .ToListAsync();
+
+    return statesCount;
+});
+
 app.Run();
