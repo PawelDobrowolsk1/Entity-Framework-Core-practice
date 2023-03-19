@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MyBoards.Entities;
+using MyBoards.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -89,5 +90,25 @@ app.MapPost("update", async (MyBoardsContext db) =>
     return epic;
 });
 
+app.MapPost("create", async (MyBoardsContext db) =>
+{
+    var address = new Address()
+    {
+        Id = Guid.Parse("b323dd7c-776a-4cf6-a92a-12df154b4a2c"),
+        City="Krakow",
+        Country = "Poland",
+        Street = "D³uga"
+    };
+
+    var user = new User()
+    {
+        Email = "user@test.com",
+        FullName = "Test User",
+        Address = address
+    };
+
+    db.Users.Add(user);
+    await db.SaveChangesAsync();
+});
 
 app.Run();
