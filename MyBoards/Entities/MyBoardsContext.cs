@@ -78,9 +78,9 @@ public class MyBoardsContext : DbContext
             eb.Property(x => x.CreatedDate).HasDefaultValueSql("getutcdate()");
             eb.Property(x => x.UpdatedDate).ValueGeneratedOnUpdate();
             eb.HasOne(c => c.Author)
-            .WithMany(a => a.Comments)
-            .HasForeignKey(c => c.AuthorId)
-            .OnDelete(DeleteBehavior.NoAction);
+                .WithMany(a => a.Comments)
+                .HasForeignKey(c => c.AuthorId)
+                .OnDelete(DeleteBehavior.ClientCascade);
         });
 
         modelBuilder.Entity<User>()
