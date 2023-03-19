@@ -62,14 +62,32 @@ if (!users.Any())
 
 app.MapGet("data", async (MyBoardsContext db) =>
 {
-    var authorsComentCounts = await db.Comments
+    var authorsCommentCountsQuery = db.Comments
     .GroupBy(c => c.AuthorId)
-    .Select(g => new { g.Key, Count = g.Count() })
-    .ToListAsync();
+    .Select(g => new { g.Key, Count = g.Count() });
 
-    var topAuthor = authorsComentCounts.First(a => a.Count == authorsComentCounts.Max(acc => acc.Count));
+    var authorsCommentCounts = await authorsCommentCountsQuery.ToListAsync();
+
+    var topAuthor = authorsCommentCounts
+    .First(a => a.Count == authorsCommentCounts.Max(acc => acc.Count));
 
     var userDetails = db.Users.First(u => u.Id == topAuthor.Key);
+
     return new { userDetails, commentCount = topAuthor.Count };
 });
+
+app.MapPost("update", async (MyBoardsContext db) =>
+{
+    Epic epic = await db.Epics.FirstAsync(epic => epic.Id == 1);
+
+    var rejectedState = await db.WorkItemsStates.FirstAsync(a => a.Value == "Rejected");
+
+    epic.State = rejectedState;
+
+    await db.SaveChangesAsync();
+
+    return epic;
+});
+
+
 app.Run();
