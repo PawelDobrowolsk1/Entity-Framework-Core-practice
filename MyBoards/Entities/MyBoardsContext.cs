@@ -18,6 +18,7 @@ public class MyBoardsContext : DbContext
     public DbSet<Comment> Comments { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<WorkItemState> WorkItemsStates { get; set; } 
+    public DbSet<WorkItemTag> WorkItemTag { get; set; } 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -112,4 +112,18 @@ app.MapPost("create", async (MyBoardsContext db) =>
     await db.SaveChangesAsync();
 });
 
+app.MapDelete("delete", async (MyBoardsContext db) =>
+{
+    var user = await db.Users
+    .FirstAsync(u => u.Id == Guid.Parse("DC231ACF-AD3C-445D-CC08-08DA10AB0E61"));
+
+    var userComments = await db.Comments.Where(c => c.AuthorId == user.Id).ToListAsync();
+    db.RemoveRange(userComments);
+
+    db.Users.Remove(user);
+
+    await db.SaveChangesAsync();
+
+});
+
 app.Run();
