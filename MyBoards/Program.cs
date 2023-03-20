@@ -102,9 +102,9 @@ app.MapGet("pagination", async (MyBoardsContext db) =>
 
     }
 
-    var result = query.Skip(pageSize * (pageNumber - 1))
+    var result = await query.Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
-                .ToList();
+                .ToListAsync();
 
     var pagedResult = new PageResult<User>(result, totalCount, pageSize, pageNumber);
 
@@ -115,8 +115,8 @@ app.MapGet("data", async (MyBoardsContext db) =>
 {
     var withAddress = true;
 
-    var user = db.Users
-    .First(u => u.Id == Guid.Parse("EBFBD70D-AC83-4D08-CBC6-08DA10AB0E61"));
+    var user = await db.Users
+    .FirstAsync(u => u.Id == Guid.Parse("EBFBD70D-AC83-4D08-CBC6-08DA10AB0E61"));
 
     if (withAddress)
     {
