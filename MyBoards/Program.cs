@@ -71,10 +71,15 @@ if (!users.Any())
 app.MapGet("data", async (MyBoardsContext db) =>
 {
     var user = await db.Users
-    .Include(u => u.Comments).ThenInclude(c => c.WorkItem)
-    .Include(u => u.Address)
-    .FirstAsync(u => u.Id == Guid.Parse("68366DBE-0809-490F-CC1D-08DA10AB0E61"));
+    .FirstAsync(u => u.Id == Guid.Parse("D00D8059-8977-4E5F-CBD2-08DA10AB0E61"));
 
+    var entries1 = db.ChangeTracker.Entries();
+
+    user.Email = "test@test.com";
+
+    var entries2 = db.ChangeTracker.Entries();
+
+    db.SaveChanges();
     return user;
 });
 
