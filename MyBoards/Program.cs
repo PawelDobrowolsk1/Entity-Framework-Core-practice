@@ -70,17 +70,21 @@ if (!users.Any())
 
 app.MapGet("data", async (MyBoardsContext db) =>
 {
-    var user = await db.Users
-    .FirstAsync(u => u.Id == Guid.Parse("D00D8059-8977-4E5F-CBD2-08DA10AB0E61"));
+    var minWorkItemsCount = "85";
 
-    var entries1 = db.ChangeTracker.Entries();
+    var states = db.WorkItemsStates
+    .FromSqlInterpolated($@"
+        SELECT wis.Id, wis.Value
+          FROM WorkItemsStates wis
+          JOIN WorkItems wi on wi.StateId = wis.Id
+          GROUP BY wis.Id, wis.Value
+          HAVING COUNT(*) > {minWorkItemsCount}"
+          )
+    .ToList();
 
-    user.Email = "test@test.com";
+    var entries = db.ChangeTracker.Entries();
 
-    var entries2 = db.ChangeTracker.Entries();
-
-    db.SaveChanges();
-    return user;
+    return states;
 });
 
 app.MapPost("update", async (MyBoardsContext db) =>
