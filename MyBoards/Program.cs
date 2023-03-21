@@ -113,18 +113,14 @@ app.MapGet("pagination", async (MyBoardsContext db) =>
 
 app.MapGet("data", async (MyBoardsContext db) =>
 {
-    var withAddress = true;
+    var userComments = await db.Users
+     .Include(u => u.Address)
+     .Where(u => u.Address.Country == "Albania")
+     .SelectMany(u => u.Comments)
+     .Select(c => c.Message)
+     .ToListAsync();
 
-    var user = await db.Users
-    .FirstAsync(u => u.Id == Guid.Parse("EBFBD70D-AC83-4D08-CBC6-08DA10AB0E61"));
-
-    if (withAddress)
-    {
-        var result = new { FullName = user.FullName, Address = $"{user.Address.Street} {user.Address.City}" };
-        return result;
-    }
-
-    return new { FullName = user.FullName, Address = "-" };
+    return userComments;
 });
 
 app.MapPost("update", async (MyBoardsContext db) =>
