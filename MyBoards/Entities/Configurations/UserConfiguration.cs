@@ -10,5 +10,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasOne(u => u.Address)
         .WithOne(u => u.User)
         .HasForeignKey<Address>(a => a.UserId);
+
+        builder.HasIndex(u => new { u.Email, u.FullName });
     }
 }
